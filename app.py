@@ -6,8 +6,12 @@ from flask.helpers import url_for
 from flask.json import jsonify
 from flask_pymongo import PyMongo
 
-from config import *
+# update with every project
+DB_NAME = "mars_app"
+MONGODB_URL = "mongodb://localhost:27017/"
 
+# mongodb connection string
+MONGODB_DATABASE_URL = f"{MONGODB_URL}{DB_NAME}"
 
 # Initialize the flask app
 app = Flask(__name__)
@@ -19,7 +23,9 @@ app.config["result_backend"] = MONGODB_DATABASE_URL
 app.config["MONGO_URI"] = "mongodb://localhost:27017/mars_app"
 mongo = PyMongo(app)
 
-celery = Celery(app.name, backend=app.config["result_backend"], broker=app.config["broker_url"])
+celery = Celery(
+    app.name, backend=app.config["result_backend"], broker=app.config["broker_url"]
+)
 celery.conf.update(app.config)
 
 
@@ -32,7 +38,7 @@ def index():
     if request.method == "GET":
         return render_template("index.html", mars=mars)
     elif request.method == "POST":
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
 
 
 # # Originally we have a route that runs the web harvesting function
@@ -44,10 +50,10 @@ def index():
 #     return jsonify(success)
 
 
-@app.route('/longtask', methods=['POST'])
+@app.route("/longtask", methods=["POST"])
 def longtask():
     task = scraping.scrape_all.apply_async()
-    return jsonify({}), 202, {'Location': url_for('taskstatus', task_id=task.id)}
+    return jsonify({}), 202, {"Location": url_for("taskstatus", task_id=task.id)}
 
 
 @app.route("/status/<task_id>", methods=["GET"])
