@@ -2,6 +2,10 @@
 
 > Web-scraping with Celery Task and delivering data in a Flask App.
 
+![Mars](resources/mars.png)
+
+<span>Photo by <a href="https://unsplash.com/@lobosnico?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Nicolas Lobos</a> on <a href="https://unsplash.com/s/photos/mars?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+
 ## Web Scraping
 
 Web scraping simplifies the process of extracting data from sources where APIs are not available. Scraping speeds up the data gathering process by automating steps and creating easy accessible scrapped data in many formats including CSV, JSON, or raw text.
@@ -20,57 +24,51 @@ Web Scraping Tools:
 - Bootstrap 4
 - jQuery
 
-Web scraping tool interest:
+Web Scraping Tools I'm interested in:
 
 - selenium but still using Chrome Driver
 - requests
 - regex
 
-#### NASA Mars News
+### Scrape Mars News
 
-* Scrape the NASA Mars News Site and collect the latest News Title and Paragraph Text
+- Scrape the NASA Mars News Site and collect the latest News Title and Paragraph Text from https://mars.nasa.gov/news/
 
-#### JPL Mars Space Images - Featured Image
+### Featured Image
 
-* Visit the URL for the JPL Featured Space Image
-* Use Splinter to navigate the site and find the image URL for the current Featured Mars Image and assign the URL string to a variable called `featured_image_url`
-* Make sure to find the image URL to the full size `.jpg` image
-* Make sure to save a complete URL string for this image
+- Heading over to https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars for Featured Image
+- Use Splinter and Chrome Driver to navigate the site and find the image URL for the current Featured Mars Image and assign the relative image url string to a variable called img_url_rel
 
-#### Mars Weather
+### Mars Facts
 
-* Visit the Mars Weather Twitter account and scrape the latest Mars Weather Tweet from the page
-    * Save the Tweet text for the weather report as a variable called `mars_weather`
+- Visit the Mars Facts webpage and use Pandas' read_html method to grab the page's table
+- Use Pandas' to_html method to convert the table data to a HTML table with classes
 
-#### Mars Facts
+### Mars Hemispheres
 
-* Visit the Mars Facts webpage and use Pandas to scrape the table containing facts about the planet including Diameter, Mass, etc.
-* Use Pandas to convert the data to a HTML table string
+- Visit https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars site to scrape high resolution images for each of Mar's hemispheres
+- We are saving the hemisphere image, and the Hemisphere title containing the hemisphere name
 
-#### Mars Hemispheres
-
-* Visit the USGS Astrogeology site to obtain high resolution images for each of Mar's hemispheres
-* Save both the image URL string for the full resolution hemisphere image, and the Hemisphere title containing the hemisphere name. 
-    * Use a Python dictionary to store the data using the keys `img_url` and `title`
-* Append the dictionary with the image URL string and the hemisphere title to a list
-    * This list will contain one dictionary for each hemisphere
-
-
-
-- Using well organized directories with comments
-  - /notebooks # Holding climate_analysis.ipynb & SurfsUp_Challenge.ipynb
-  - /resources # Folder of graphs created from the exploratory climate analysis
-  - /templates # Jinja2 HTML template files with Tailwind
+* Using well organized directories with comments
+  - /.vscode    # Proper testing and source code editing
+  - /notebooks  # Holding practice.ipynb, mission_to_mars.ipynb & mission_to_mars_challenge.ipynb
+  - /resources  # Screenshots that the app works.
+  - /static     # css, js, fonts, etc
+  - /templates  # Jinja2 HTML template files with Bootstrap 4
   - .editorconfig # .editorconfig to power some workflows in VS Code.
-  - .gitignore # .gitignore
-  - app_refactored # The flask app using the libraries above
-  - app.py # The Module's Flask app but running through connextion
-  - database.py # Following some basic best practice of breaking the functions into modules.
-  - hawaii.db # Raw weather data
-  - models.py # I went against the grain and practiced the declarative version of SQLAlchemy
-  - openapi.yaml # This file is the actual file that connextion to power a proper OpenAPI spec and UI
+  - .gitignore  # .gitignore
+  - app.py      # The Module's Flask app but running with celery
+  - scraping.py # scrape_all function that decorated with a celery.task function
 
-## Usage
+## Storing Data
+
+We worked on our scraping script within Jupyter Notebook and then exported the code into a Python Script called scraping.py. With a function called scrape_all that decorated with a celery.task function. MongoDB is used for persistence and as a broker for Celery. I really wanted to use Celery for this module seeing that many scripts that we would be running are computational taxing and could be awesome to have a task queue to break up work.
+
+## Serving Data
+
+### Usage
+
+Running this app requires you to have a mongo, celery, and flask server running at the same time.
 
 ```powershell
 PS ~/mission-to-mars/> mongod
@@ -86,27 +84,24 @@ PS ~/mission-to-mars/> $env:FLASK_ENV = 'development'
 PS ~/mission-to-mars/> python app.py
 ```
 
-## Routes
+### Routes
 
-/
-/
+/                 # index route
+/longtask         # jQuery route that starts the Celery Long Task
+/status/<task_id> # jQuery route that checks on the status of the task
 
+### Data Powering the Web app
 
-## Data Powering the Web app
-
-* Use MongoDB with Flask templating to create a new HTML page that displays all of the information that was scraped from the URLs above
-* Convert Jupyter Notebook into a Python Script called `scrape_mars.py` with a function called `scrape` that will execute all of the scraping code from above and return one Python Dictionary containing all of the scraped data
-* Create a route called `/scrape` that will import the `scrape_mars.py` script and call the `scrape` function
-    * Store the return value in Mongo as a Python Dictionary
-* Create a root route `/` that will query the Mongo database and pass the Mars Data into an HTML template to display the data
-* Create a template HTML file called `index.html` that will take the Mars Data Dictionary and display all of the data in the appropriate HTML elements
+- MongoDB is used for persistence and as a broker for Celery. With Flask and HTML we display all of the information that was scraped from the URLs and stored in Mongo.
 
 ## Todo Checklist
 
 A helpful checklist to gauge how your README is coming on what I would like to finish:
 
+- [ ] PYTHON REQUIREMENTS FILE! pipenv?!?
 - [ ] Update the UI/UX.
 - [ ] jQuery needs work.
+- [ ] State management and logic with the Fetch button
 
 ## Contributing
 
