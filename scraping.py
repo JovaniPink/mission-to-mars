@@ -44,7 +44,7 @@ def scrape_all(self):
         browser.quit()
 
         # Call the upsert within the worker
-        mongo.db.mars.update({}, store_data, upsert=True)
+        mongo.db.mars_app.update({}, store_data, upsert=True)
 
         # Update that the function was completed.
         self.update_state(state="SUCCESS")
