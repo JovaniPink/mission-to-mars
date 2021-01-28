@@ -16,7 +16,7 @@ flask_pymongo==2.3.0
 pymongo==3.11.2
 pytz==2020.5
 requests==2.25.1
-urllib3==1.26.2
+urllib3==1.26.3
 vine==5.0.0
 Werkzeug==1.0.1
 zipp==3.4.0
