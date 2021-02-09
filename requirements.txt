@@ -21,7 +21,7 @@ vine==5.0.0
 Werkzeug==1.0.1
 zipp==3.4.0
 splinter==0.14.0
-pandas==1.2.1
+pandas==1.2.2
 numpy==1.20.1
 requests==2.25.1
 lxml==4.6.2
