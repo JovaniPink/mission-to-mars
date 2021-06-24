@@ -94,6 +94,27 @@ PS ~/mission-to-mars/> python app.py
 
 - MongoDB is used for persistence and as a broker for Celery. With Flask and HTML we display all of the information that was scraped from the URLs and stored in Mongo.
 
+Code and Structure to deploy scripts and tasks within a task queue paradigm and data pipeline for ETL purposes.
+
+I need an application setup that uses celery + Mongo for task distribution and workers management. The web application also uses triggers to kick off tasks to celery for inserting data into a database. These scripts could even use pandas and run as python modules that are fully integrated with celery as individual task workers.
+
+Celery tasks with X's query payload. This Celery tasks after performing certain operations submit jobs to another server where DB inserting celery is working and start waiting for other server tasks to be completed and response to be received.
+
+## Features
+
+- [Celery](https://docs.celeryproject.org/en/stable/index.html) is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing operations with the tools required to maintain such a system.
+
+### Workings
+
+Broker
+The Broker (Python/Mongo) is responsible for creating task queues, dispatching tasks to task queues according to some routing rules, and then delivering assignments from task queues to workers.
+
+Consumer (Celery Workers)
+The Consumer is the one or multiple Celery workers executing the tasks. You could start many workers depending on your use case.
+
+Result Backend
+The Result Backend is used for storing the results of your tasks. In this case, the API response to a database.
+
 ## Todo Checklist
 
 A helpful checklist to gauge how your README is coming on what I would like to finish:
